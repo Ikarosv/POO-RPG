@@ -1,7 +1,7 @@
-import Archetype, { Mage } from './Archetypes';
+import Archetype, { Mage, Necromancer, Ranger, Warrior } from './Archetypes';
 import Energy from './Energy';
 import Fighter, { SimpleFighter } from './Fighter';
-import Race, { Elf } from './Races';
+import Race, { Dwarf, Elf, Halfling, Orc } from './Races';
 import getRandomInt from './utils';
 
 export default class Character implements Fighter {
@@ -14,11 +14,15 @@ export default class Character implements Fighter {
   private _dexterity: number;
   private _energy: Energy;
 
-  constructor(private name: string) {
+  constructor(
+    private name: string,
+    characterArchetype = 'mage',
+    charachterRace = 'elf',
+  ) {
     this._dexterity = getRandomInt(1, 10);
-    this._race = new Elf(name, this._dexterity);
-    this._archetype = new Mage(name);
-    this._maxLifePoints = Math.round(this._race.maxLifePoints / 2);
+    this._race = this.getRace(charachterRace, name);
+    this._archetype = this.getArchetype(characterArchetype, name);
+    this._maxLifePoints = this._race.maxLifePoints / 2;
     this._lifePoints = this._maxLifePoints;
     this._strength = getRandomInt(1, 10);
     this._defense = getRandomInt(1, 10);
@@ -83,6 +87,40 @@ export default class Character implements Fighter {
     this._defense += getRandomInt(1, 10);
     this._dexterity += getRandomInt(1, 10);
     this._energy.amount = 10;
+  }
+
+  getArchetype = (
+    characterArchetype: string | undefined,
+    name: string,
+  ): Archetype => {
+    const type = characterArchetype?.toLocaleLowerCase() || 'elf';
+
+    switch (type) {
+      case 'necromancer':
+        return new Necromancer(name);
+      case 'ranger':
+        return new Ranger(name);
+      case 'warrior':
+        return new Warrior(name);
+      default:
+        return new Mage(name);
+    }
+  };
+
+  getRace(
+    charachterRace: string | undefined,
+    name: string,
+  ): Race {
+    switch (charachterRace?.toLowerCase()) {
+      case 'dwarf':
+        return new Dwarf(name, this._dexterity);
+      case 'halfling':
+        return new Halfling(name, this._dexterity);
+      case 'orc':
+        return new Orc(name, this._dexterity);
+      default:
+        return new Elf(name, this._dexterity);
+    }
   }
 
   special(enemy: Fighter): void {
