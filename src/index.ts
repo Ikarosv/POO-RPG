@@ -9,8 +9,6 @@ for (let i = 0; i < 5; i += 1) player1.levelUp();
 
 const player2 = new Character('player2');
 const player3 = new Character('player3');
-console.log(player1.lifePoints, player2.lifePoints, player3.lifePoints);
-console.log(player1.race.maxLifePoints / 2, player2.race.maxLifePoints / 2, player3.race.maxLifePoints / 2);
 
 const monster1 = new Monster();
 const monster2 = new Dragon();
